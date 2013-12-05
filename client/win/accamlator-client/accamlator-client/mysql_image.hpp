@@ -1,3 +1,4 @@
+#define __LCC__
 #include <mysql.h>
 #include <string>
 

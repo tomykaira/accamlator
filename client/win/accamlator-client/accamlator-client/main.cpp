@@ -1,3 +1,4 @@
+#define _WIN32_WINNT 0x501
 #include "opencv2/opencv.hpp"
 #include <vector>
 #include <boost/asio.hpp>

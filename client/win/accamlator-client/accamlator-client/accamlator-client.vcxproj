@@ -25,9 +25,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v110_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -47,9 +47,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\mysql-connector-c-6.1.2-win32\include;C:\boost_1_55_0;C:\opencv\build\include;$(IncludePath)</IncludePath>
-    <ReferencePath>C:\opencv\build\x86\vc11\staticlib;C:\opencv\build\x86\vc11\lib;C:\mysql-connector-c-6.1.2-win32\lib;C:\mysql-connector-c-6.1.2-win32\lib\vs11;C:\boost_1_55_0\lib32-msvc-11.0;C:\opencv\build_vs11\lib\Release;$(ReferencePath)</ReferencePath>
-    <LibraryPath>C:\opencv\build\x86\vc11\staticlib;C:\opencv\build\x86\vc11\lib;C:\mysql-connector-c-6.1.2-win32\lib;C:\mysql-connector-c-6.1.2-win32\lib\vs11;C:\boost_1_55_0\lib32-msvc-11.0;C:\opencv\build_vs11\lib\Release;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>C:\mysql-connector-c-noinstall-6.0.2-win32\include;C:\boost_1_55_0;C:\opencv\build\include;$(IncludePath)</IncludePath>
+    <ReferencePath>C:\opencv\build\x86\vc11\staticlib;C:\opencv\build\x86\vc11\lib;C:\mysql-connector-c-noinstall-6.0.2-win32\lib;C:\boost_1_55_0\lib32-msvc-11.0;C:\opencv\build_vs11\lib\Release;$(ReferencePath)</ReferencePath>
+    <LibraryPath>C:\opencv\build\x86\vc11\staticlib;C:\opencv\build\x86\vc11\lib;C:\mysql-connector-c-noinstall-6.0.2-win32\lib;C:\boost_1_55_0\lib32-msvc-11.0;C:\opencv\build_vs11\lib\Release;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
