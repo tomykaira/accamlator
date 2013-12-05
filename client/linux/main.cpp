@@ -5,9 +5,16 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include "mysql_image.hpp"
 
-int main(int, char**)
+int main(int argv, char** argc)
 {
-    MySQLImage my("localhost", "test");
+    std::string host = "localhost";
+    std::string source = "test";
+    if (argv == 3)
+    {
+        host = std::string(argc[1]);
+        source = std::string(argc[2]);
+    }
+    MySQLImage my(host, source);
 
     boost::asio::io_service io;
 
