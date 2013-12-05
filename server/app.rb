@@ -10,6 +10,18 @@ get '/', provides: 'html' do
   haml :index, locals: { sources: sources }
 end
 
+get '/stored*' do |c|
+  file = File.join(__dir__, 'stored', *(c.split('/').delete_if(&:empty?)))
+  if File.file?(file)
+    content_type = file.end_with?('.png') ? 'image/png' : 'text/plain'
+    [200, { 'Content-Type' => content_type }, File.read(file, mode: 'rb')]
+  else
+    files = Dir[file + '/*'].map { |path| path.gsub(__dir__, '') }.sort
+    haml :file_index, locals: { files: files }
+  end
+
+end
+
 get '/:source' do
   source = params[:source]
   image = Images.new(CONN).latest_image(source)

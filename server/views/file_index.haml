@@ -1,0 +1,10 @@
+%ul
+  - files.each do |file|
+    %li
+      - if file.end_with?('.png')
+        = File.basename(file)
+        %br
+        %img{src: file}
+      - else
+        %a{href: file}
+          = File.basename(file)
