@@ -1,0 +1,17 @@
+$LOAD_PATH.unshift(__dir__ + '/lib')
+require 'images'
+
+namespace :db do
+  desc 'Create database tables'
+  task :create do
+    require 'mysql2'
+    # CREATE DATABASE accamlator DEFAULT CHARACTER SET utf8;
+    # GRANT ALL PRIVILEGES ON accamlator.* TO accam_server@'localhost';
+    conn = Mysql2::Client.new(host: 'localhost', username: 'accam_server', database: 'accamlator')
+    client = Images.new(conn).connection
+    client.query(Image::TABLE_DEFINITION)
+    Image::INDICES.each do |index|
+      client.query(index)
+    end
+  end
+end
