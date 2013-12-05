@@ -3,6 +3,9 @@ require 'images'
 require 'base64'
 require 'sinatra'
 
+set :bind, '0.0.0.0'
+set :port, 5000
+
 CONN = Mysql2::Client.new(host: 'localhost', username: 'accam_server', database: 'accamlator')
 
 get '/', provides: 'html' do
