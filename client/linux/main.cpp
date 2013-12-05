@@ -1,6 +1,7 @@
 #include "opencv2/opencv.hpp"
 #include <vector>
-#include <boost/filesystem/fstream.hpp>
+#include <boost/asio.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include "mysql_image.hpp"
 
 int main(int, char**)
@@ -13,15 +14,21 @@ int main(int, char**)
 
     MySQLImage my("localhost", "test");
 
-    cv::Mat edges;
-    cv::namedWindow("edges",1);
+    boost::asio::io_service io;
 
-    cv::Mat frame;
-    std::vector<uchar> buf;
-    cap >> frame; // get a new frame from camera
-    cv::imencode(".png", frame, buf);
-    std::string data(buf.begin(), buf.end());
-    my.saveImage(data);
+    while(1) {
+        boost::asio::deadline_timer t(io, boost::posix_time::seconds(1));
+
+        cv::Mat frame;
+        std::vector<uchar> buf;
+        cap >> frame; // get a new frame from camera
+        cv::imencode(".png", frame, buf);
+        std::string data(buf.begin(), buf.end());
+        my.saveImage(data);
+        std::cout << "Sending" << std::endl;
+
+        t.wait();
+    }
 
     // the camera will be deinitialized automatically in VideoCapture destructor
     return 0;
