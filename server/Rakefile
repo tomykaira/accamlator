@@ -9,8 +9,8 @@ namespace :db do
     # GRANT ALL PRIVILEGES ON accamlator.* TO accam_server@'localhost';
     conn = Mysql2::Client.new(host: 'localhost', username: 'accam_server', database: 'accamlator')
     client = Images.new(conn).connection
-    client.query(Image::TABLE_DEFINITION)
-    Image::INDICES.each do |index|
+    client.query(Images::TABLE_DEFINITION)
+    Images::INDICES.each do |index|
       client.query(index)
     end
   end
