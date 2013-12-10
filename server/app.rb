@@ -6,10 +6,12 @@ require 'sinatra'
 set :bind, '0.0.0.0'
 set :port, 5000
 
-CONN = Mysql2::Client.new(host: 'localhost', username: 'accam_server', database: 'accamlator')
+def conn
+  Mysql2::Client.new(host: 'localhost', username: 'accam_server', database: 'accamlator')
+end
 
 get '/', provides: 'html' do
-  sources = Images.new(CONN).sources
+  sources = Images.new(conn).sources
   haml :index, locals: { sources: sources }
 end
 
@@ -27,6 +29,6 @@ end
 
 get '/:source' do
   source = params[:source]
-  image = Images.new(CONN).latest_image(source)
+  image = Images.new(conn).latest_image(source)
   haml :show, locals: { captured_at: image['captured_at'], encoded_image: Base64.encode64(image['data']) }
 end
