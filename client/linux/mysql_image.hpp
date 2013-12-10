@@ -1,3 +1,6 @@
+#ifndef _MYSQL_IMAGE_H_
+#define _MYSQL_IMAGE_H_
+
 #include <mysql/mysql.h>
 #include <string>
 
@@ -13,3 +16,5 @@ public:
 
   void saveImage(std::string data) const;
 };
+
+#endif /* _MYSQL_IMAGE_H_ */
