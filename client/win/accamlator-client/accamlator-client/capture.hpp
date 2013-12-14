@@ -15,6 +15,7 @@ private:
   static const int interval_ = 1000;
   cv::VideoCapture cap_;
   const MySQLImage my_;
+  const bool flip_;
   boost::asio::io_service io_;
   boost::asio::deadline_timer timer_;
 
@@ -22,7 +23,7 @@ private:
   void resetTimer();
 
 public:
-  Capture(MySQLImage &my);
+  Capture(MySQLImage &my, bool flip);
 
   void runPeriodicCapture();
 };

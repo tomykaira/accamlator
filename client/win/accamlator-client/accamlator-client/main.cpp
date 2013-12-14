@@ -5,14 +5,20 @@ int main(int argv, char** argc)
 {
     std::string host = "localhost";
     std::string source = "test";
-    if (argv == 3)
+	bool flip;
+    if (argv >= 3)
     {
         host = std::string(argc[1]);
         source = std::string(argc[2]);
     }
+    if (argv >= 4)
+    {
+        auto arg = std::string(argc[3]);
+        flip = arg == "1" || arg == "true" || arg == "flip";
+    }
 	try {
 		MySQLImage my(host, source);
-		Capture capture(my);
+		Capture capture(my, flip);
 		capture.runPeriodicCapture();
 	} catch (std::string e) {
 		std::cerr << "Failed to connect to MySQL: " << e << std::endl;
