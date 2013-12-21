@@ -63,28 +63,33 @@ loop do
     end
 
     data = MessagePack.unpack(received_msg)
-    response =
-      case data['command']
-      when 'register'
-        puts "#{data['name']} is registered"
-        clients.register([data['name']], routing_info)
-        { 'command' => 'ack' }
-      when 'update'
-        update_waiters << UpdateWaiter.new
-      when 'image'
-        name = clients.by_info(routing_info)
-        now = Time.now
-        found, new_waiters = update_waiters.partition { |w| w.target == name }
-        found.each do |waiter|
-          server.respond(waiter.info, data)
-        end
-        dir = File.join(__dir__, 'stored', name, now.strftime('%Y-%m-%d'))
-        FileUtils.mkdir_p(dir)
-        File.write(File.join(dir, time.strftime('%H_%M.png')), data['png'], nil, mode: 'wb')
-        update_waiters = new_waiters
-        { 'command' => 'ack' }
+    case data['command']
+    when 'register'
+      puts "#{data['name']} is registered"
+      clients.register(data['name'], routing_info)
+      server.respond(routing_info, { 'status' => 'ack' })
+    when 'update'
+      target = data['target']
+      info = clients.by_name(target)
+      if info
+        update_waiters << UpdateWaiter.new(routing_info, target)
+        server.respond(info, { 'command' => 'update' })
+      else
+        server.respond(routing_info, { 'status' => 'error', 'message' => 'unknown client' })
       end
-    server.respond(routing_info, response)
+    when 'image'
+      name = clients.by_info(routing_info)
+      now = Time.now
+      found, new_waiters = update_waiters.partition { |w| w.target == name }
+      found.each do |waiter|
+        server.respond(waiter.info, data)
+      end
+      dir = File.join(__dir__, 'stored', name, now.strftime('%Y-%m-%d'))
+      FileUtils.mkdir_p(dir)
+      File.write(File.join(dir, time.strftime('%H_%M.png')), data['png'], nil, mode: 'wb')
+      update_waiters = new_waiters
+      server.respond(routing_info, { 'status' => 'ack' })
+    end
   rescue
     $stderr.puts($!)
     $stderr.puts($@)

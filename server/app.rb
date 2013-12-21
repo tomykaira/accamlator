@@ -2,6 +2,8 @@ $LOAD_PATH.unshift(__dir__ + '/lib')
 require 'images'
 require 'base64'
 require 'sinatra'
+require 'ffi-rzmq'
+require 'msgpack'
 
 set :bind, '0.0.0.0'
 set :port, 5000
@@ -9,6 +11,9 @@ set :port, 5000
 def conn
   Mysql2::Client.new(host: 'localhost', username: 'accam_server', database: 'accamlator')
 end
+
+ctx = ZMQ::Context.new(1)
+zmq_server = "tcp://0.0.0.0:#{ENV['ZMQ_PORT'] || 5995}"
 
 get '/', provides: 'html' do
   sources = Images.new(conn).sources
@@ -29,6 +34,21 @@ end
 
 get '/:source' do
   source = params[:source]
-  image = Images.new(conn).latest_image(source)
-  haml :show, locals: { captured_at: image['captured_at'], encoded_image: Base64.encode64(image['data']) }
+
+  zmq = ctx.socket(ZMQ::REQ)
+  zmq.connect zmq_server
+  zmq.send_string({ 'command' => 'update', 'target' => source }.to_msgpack)
+  data = {}
+  until data['command'] == 'image' || data['status'] == 'error'
+    str = ''
+    zmq.recv_string(str)
+    data = MessagePack.unpack(str)
+  end
+  zmq.close
+
+  if data['command'] == 'image'
+    haml :show, locals: { captured_at: Time.now, encoded_image: Base64.encode64(data['png']) }
+  else
+    'Error: ' + data['message']
+  end
 end
