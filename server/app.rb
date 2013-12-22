@@ -46,7 +46,7 @@ get '/:source' do
   end
   zmq.close
 
-  if data['command'] == 'image'
+  if data['command'] == 'image' && data['result'] == 'succeeded'
     haml :show, locals: { captured_at: Time.now, encoded_image: Base64.encode64(data['png']) }
   else
     'Error: ' + data['message']

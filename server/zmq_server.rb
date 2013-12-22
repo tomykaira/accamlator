@@ -53,6 +53,13 @@ class UpdateWaiter
   end
 end
 
+def save_image(name, png)
+  now = Time.now
+  dir = File.join(__dir__, 'stored', name, now.strftime('%Y-%m-%d'))
+  FileUtils.mkdir_p(dir)
+  File.write(File.join(dir, now.strftime('%H_%M.png')), png, nil, mode: 'wb')
+end
+
 loop do
   begin
     routing_info = ''
@@ -79,14 +86,11 @@ loop do
       end
     when 'image'
       name = clients.by_info(routing_info)
-      now = Time.now
       found, new_waiters = update_waiters.partition { |w| w.target == name }
       found.each do |waiter|
         server.respond(waiter.info, data)
       end
-      dir = File.join(__dir__, 'stored', name, now.strftime('%Y-%m-%d'))
-      FileUtils.mkdir_p(dir)
-      File.write(File.join(dir, time.strftime('%H_%M.png')), data['png'], nil, mode: 'wb')
+      save_image(name, data['png']) if data['result'] == 'succeeded'
       update_waiters = new_waiters
       server.respond(routing_info, { 'status' => 'ack' })
     end

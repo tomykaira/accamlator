@@ -1,6 +1,25 @@
 import zmq
 import msgpack
 import traceback
+import subprocess
+import os
+from tempfile import mkstemp
+
+def capture():
+    fd, path = mkstemp(suffix=".png")
+    try:
+        os.close(fd)
+        p = subprocess.Popen(["../linux/accam_client", path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p.wait()
+        if p.returncode != 0:
+            (stdout, stderr) = p.communicate(None)
+            return {'command': 'image', 'result': 'failed', 'message': stderr}
+        else:
+            with open(path, mode='rb') as f:
+                return {'command': 'image', 'result': 'succeeded',  'png': f.read()}
+    finally:
+        os.remove(path)
+
 
 context = zmq.Context()
 
@@ -26,8 +45,8 @@ while True:
     try:
         message = client.read()
         if message.get(b'command') == b'update':
-            with open("/tmp/test.png", mode='rb') as f:
-                client.send({'command': 'image', 'png': f.read()})
+            result = capture()
+            client.send(result)
         if message.get(b'status') == b'error':
             print("Error response: %s" % resp)
         error_count = 0
