@@ -47,6 +47,7 @@ while True:
         if message.get(b'command') == b'update':
             result = capture()
             client.send(result)
+            print("Sent %s" % result['result'])
         if message.get(b'status') == b'error':
             print("Error response: %s" % resp)
         error_count = 0
