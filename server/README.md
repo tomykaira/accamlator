@@ -2,10 +2,10 @@
 
 ## Requirements
 
-- libmysqlclient-dev
 - ruby (rbenv)
 - bundler
 - rbenv is always enabled https://github.com/sstephenson/rbenv/issues/350#issuecomment-14125255
+- zmq
 
 ## To sakura
 
