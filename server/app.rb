@@ -1,4 +1,3 @@
-$LOAD_PATH.unshift(__dir__ + '/lib')
 require 'base64'
 require 'sinatra'
 require 'ffi-rzmq'

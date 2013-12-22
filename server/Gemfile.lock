@@ -11,7 +11,6 @@ GEM
     haml (4.0.4)
       tilt
     msgpack (0.5.5)
-    mysql2 (0.3.14)
     rack (1.5.2)
     rack-protection (1.5.1)
       rack
@@ -31,6 +30,5 @@ DEPENDENCIES
   foreman
   haml
   msgpack
-  mysql2
   rake
   sinatra
