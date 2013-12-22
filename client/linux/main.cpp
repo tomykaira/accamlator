@@ -1,24 +1,20 @@
-#include "mysql_image.hpp"
-#include "capture.hpp"
+#include <iostream>
+
+#include <opencv2/opencv.hpp>
 
 int main(int argv, char** argc)
 {
-    std::string host = "localhost";
-    std::string source = "test";
-    bool flip = false;
-    if (argv >= 3)
-    {
-        host = std::string(argc[1]);
-        source = std::string(argc[2]);
+    cv::VideoCapture cap(0);
+    if (!cap.isOpened()) {
+        std::cerr << "Failed to open device" << std::endl;
+        return 1;
     }
-    if (argv >= 4)
-    {
-        auto arg = std::string(argc[3]);
-        flip = arg == "1" || arg == "true" || arg == "flip";
+    cv::Mat frame;
+    cap >> frame;
+    if (frame.empty()) {
+        std::cerr << "Frame is empty" << std::endl;
+        return 1;
     }
-    MySQLImage my(host, source);
-    Capture capture(my, flip);
-
-    capture.runPeriodicCapture();
+    cv::imwrite(argc[1], frame);
     return 0;
 }
