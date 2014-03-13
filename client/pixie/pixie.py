@@ -10,13 +10,16 @@ def capture():
     try:
         os.close(fd)
         p = subprocess.Popen(["../linux/accam_client", path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        p.wait()
+        p.wait(timeout=30)
         if p.returncode != 0:
             (stdout, stderr) = p.communicate(None)
             return {'command': 'image', 'result': 'failed', 'message': stderr}
         else:
             with open(path, mode='rb') as f:
                 return {'command': 'image', 'result': 'succeeded',  'png': f.read()}
+    except:
+        (stdout, stderr) = p.communicate(None)
+        return {'command': 'image', 'result': 'failed', 'message': stderr}
     finally:
         os.remove(path)
 
